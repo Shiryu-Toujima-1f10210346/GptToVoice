@@ -1,7 +1,7 @@
 import React from "react";
 
 function index() {
-  const [text, setText] = React.useState("テストなのだ");
+  const [text, setText] = React.useState("");
   const [audioSrc, setAudioSrc] = React.useState("");
   const [userInput, setUserInput] = React.useState("あなたの名前は？");
 
@@ -56,15 +56,7 @@ function index() {
       />
       <button onClick={genConversation}>会話生成</button>
       <div>{text}</div>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-
-      <button onClick={generateVoice}>音声生成</button>
-      <br></br>
-      {audioSrc && <audio src={audioSrc} controls />}
+      {audioSrc && <audio src={audioSrc} controls autoPlay />}
     </div>
   );
 }
