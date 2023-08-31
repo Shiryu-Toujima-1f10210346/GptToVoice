@@ -29,7 +29,7 @@ function index() {
     console.log(process.env.VOICE_KEY);
     try {
       const response = await fetch(
-        `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${userText}&key=${process.env.VOICE_KEY}`
+        `https://deprecatedapis.tts.quest/v2/voicevox/audio/?text=${userText}&key=${process.env.VOICE_KEY}&speaker=1`
       );
 
       console.log("fetch");

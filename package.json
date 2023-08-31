@@ -20,6 +20,7 @@
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
     "@vercel/postgres": "^0.4.1",
+    "dotenv": "^16.3.1",
     "env": "^0.0.2",
     "next": "^13.1.1",
     "openai": "^3.3.0",
