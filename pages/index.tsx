@@ -34,7 +34,6 @@ function index() {
       console.log(e);
     }
   }
-
   async function generateVoice(userText: string) {
     console.log(process.env.VOICE_KEY);
     try {
@@ -56,62 +55,33 @@ function index() {
       console.log(e);
     }
   }
-  let mediaRecorder: MediaRecorder | null = null;
-  const startRecording = () => {
-    setRecording(true);
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(async (stream) => {
-        const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: "audio/webm",
-        });
-        const audioChunks = [];
-        mediaRecorder.addEventListener("dataavailable", (event) => {
-          audioChunks.push(event.data);
-        });
-        mediaRecorder.addEventListener("stop", async () => {
-          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          const audio = new Audio(audioUrl);
-          formData.append("file", audioBlob, "audio.webm");
-          console.log(process.env.NEXT_PUBLIC_NOT_INIAD_KEY);
-          const trans = fetch(endPoint, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOT_INIAD_KEY}`,
-            },
-            body: formData,
-          });
-          console.log(trans);
-          const response = await (await trans).json();
-          console.log(response);
-          console.log(response.text);
-          setHistory([...history, response.text]);
-          setTranscription(response.text);
-          setUserInput(response.text);
-          genConversation(response.text);
-        });
-        mediaRecorder.start();
-        setTimeout(() => {
-          mediaRecorder.stop();
-        }, 3000);
-      });
-  };
-
+  async function startRecording(file) {
+    formData.append("file", file, "audio.webm");
+    console.log(process.env.NEXT_PUBLIC_NOT_INIAD_KEY);
+    const trans = fetch(endPoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOT_INIAD_KEY}`,
+      },
+      body: formData,
+    });
+    console.log(trans);
+    const response = await (await trans).json();
+    console.log(response);
+    console.log(response.text);
+    setHistory([...history, response.text]);
+    setTranscription(response.text);
+    setUserInput(response.text);
+    genConversation(response.text);
+  }
   const stopRecording = () => {
-    mediaRecorder.stop();
     setRecording(false);
   };
 
   return (
     <div>
       <div>{userInput}</div>
-      <input
-        type="text"
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-      />
-      <button onClick={(e) => genConversation(userInput)}>会話生成</button>
+
       <div>{text}</div>
       {audioSrc && <audio src={audioSrc} controls autoPlay />}
       <div>
