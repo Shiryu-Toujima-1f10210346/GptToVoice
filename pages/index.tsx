@@ -11,8 +11,6 @@ function index() {
   const [audioSrc, setAudioSrc] = React.useState("");
   const [userInput, setUserInput] = React.useState("");
   const [recording, setRecording] = React.useState(false);
-  const [audioChunks, setAudioChunks] = React.useState([]);
-  const [transcription, setTranscription] = React.useState("");
 
   async function genConversation(input: string) {
     try {
@@ -70,7 +68,6 @@ function index() {
     console.log(response);
     console.log(response.text);
     setHistory([...history, response.text]);
-    setTranscription(response.text);
     setUserInput(response.text);
     genConversation(response.text);
   }
