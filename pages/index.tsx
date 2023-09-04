@@ -1,6 +1,5 @@
 import React from "react";
-import { OpenAIApi, Configuration } from "openai";
-import fs from "fs";
+
 function index() {
   const formData = new FormData();
   const endPoint = "https://api.openai.com/v1/audio/transcriptions";
