@@ -6,6 +6,7 @@ function index() {
   const endPoint = "https://api.openai.com/v1/audio/transcriptions";
   formData.append("model", "whisper-1");
   formData.append("language", "ja");
+  const [history, setHistory] = React.useState([]);
   const [text, setText] = React.useState("");
   const [audioSrc, setAudioSrc] = React.useState("");
   const [userInput, setUserInput] = React.useState("");
@@ -13,20 +14,21 @@ function index() {
   const [audioChunks, setAudioChunks] = React.useState([]);
   const [transcription, setTranscription] = React.useState("");
 
-  async function genConversation() {
+  async function genConversation(input: string) {
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user: userInput }),
+        body: JSON.stringify({ user: input }),
       });
       const data = await response.json();
       console.log(data);
       console.log(data.result);
       console.log(data.result.content);
       setText(data.result.content);
+      setHistory([...history, data.result.content]);
       generateVoice(data.result.content);
     } catch (e) {
       console.log(e);
@@ -54,8 +56,9 @@ function index() {
       console.log(e);
     }
   }
-
+  let mediaRecorder: MediaRecorder | null = null;
   const startRecording = () => {
+    setRecording(true);
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then(async (stream) => {
@@ -71,35 +74,32 @@ function index() {
           const audioUrl = URL.createObjectURL(audioBlob);
           const audio = new Audio(audioUrl);
           formData.append("file", audioBlob, "audio.webm");
-          console.log(process.env.NOT_INIAD_KEY);
+          console.log(process.env.NEXT_PUBLIC_NOT_INIAD_KEY);
           const trans = fetch(endPoint, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${process.env.NOT_INIAD_KEY}`,
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOT_INIAD_KEY}`,
             },
             body: formData,
           });
-
+          console.log(trans);
           const response = await (await trans).json();
+          console.log(response);
+          console.log(response.text);
+          setHistory([...history, response.text]);
           setTranscription(response.text);
           setUserInput(response.text);
-          if (response.text === "" || userInput === "") {
-            console.log("何も得ず");
-            return;
-          } else {
-            await genConversation();
-          }
-
-          setAudioSrc(audioUrl);
+          genConversation(response.text);
         });
         mediaRecorder.start();
         setTimeout(() => {
           mediaRecorder.stop();
-        }, 2000);
+        }, 3000);
       });
   };
 
   const stopRecording = () => {
+    mediaRecorder.stop();
     setRecording(false);
   };
 
@@ -111,7 +111,7 @@ function index() {
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
       />
-      <button onClick={genConversation}>会話生成</button>
+      <button onClick={(e) => genConversation(userInput)}>会話生成</button>
       <div>{text}</div>
       {audioSrc && <audio src={audioSrc} controls autoPlay />}
       <div>
@@ -121,7 +121,7 @@ function index() {
         <button onClick={stopRecording} disabled={!recording}>
           Stop
         </button>
-        <p>{transcription}</p>
+        <p>{history}</p>
       </div>
     </div>
   );
