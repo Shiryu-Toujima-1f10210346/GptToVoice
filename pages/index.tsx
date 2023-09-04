@@ -67,10 +67,11 @@ function index() {
           audioChunks.push(event.data);
         });
         mediaRecorder.addEventListener("stop", async () => {
-          const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
+          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
           const audioUrl = URL.createObjectURL(audioBlob);
           const audio = new Audio(audioUrl);
-          formData.append("file", audioBlob, "audio.mp3");
+          formData.append("file", audioBlob, "audio.webm");
+          console.log(process.env.NOT_INIAD_KEY);
           const trans = fetch(endPoint, {
             method: "POST",
             headers: {
