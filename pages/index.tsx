@@ -99,7 +99,7 @@ function index() {
   };
 
   const stopRecording = () => {
-    mediaRecorder.stop();
+    mediaRecorder?.stop();
     setRecording(false);
   };
 
@@ -121,7 +121,11 @@ function index() {
         <button onClick={stopRecording} disabled={!recording}>
           Stop
         </button>
-        <p>{history}</p>
+        <p>
+          {history.map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
+        </p>
       </div>
     </div>
   );
