@@ -5,3 +5,5 @@
 VOICE_KEY="https://su-shiki.com/api/ から取得してください"
 
 NEXT_PUBLIC_OPENAI_API_KEY="OPENAIから取得したキー"
+
+INIAD生はINIADブランチを参照されたい
