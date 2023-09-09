@@ -1,8 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 const fs = require("fs");
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-  basePath: "https://api.openai.iniad.org/api/v1",
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 

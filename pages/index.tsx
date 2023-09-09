@@ -74,11 +74,11 @@ function index() {
           const audioUrl = URL.createObjectURL(audioBlob);
           const audio = new Audio(audioUrl);
           formData.append("file", audioBlob, "audio.webm");
-          console.log(process.env.NEXT_PUBLIC_NOT_INIAD_KEY);
+          console.log(process.env.NEXT_PUBLIC_OPENAI_API_KEY);
           const trans = fetch(endPoint, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOT_INIAD_KEY}`,
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
             },
             body: formData,
           });
